@@ -1,97 +1,79 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
+#include "archive.h"
 
-int choice = 0;
-
-// Estrutura de dados do cliente
-struct customer
-{
-    int customerId;
-    char name[50];
-    char address[100];
-    float balance;
-    int NIF;
-};
-
-// Menu inicial
-void startMenu();
-
-// Registo do cliente
-void customerRegistration(struct customer *u);
-
-// Base do programa
 int main()
 {
-    char option, answer;
-    while (option != 'S' && option != 's')
+    int option = 0;    // Registo ou Login ;
+    char userType[20]; // Gestor ou Cliente ;
+
+    printf("Bem-vindo!\n");
+
+    while (1)   // Loop infinito sem condição
     {
-        startMenu();
-        printf("Deseja encerrar o programa (S/N)? ");
-        scanf(" %c", &option);
-    }
-    printf("A encerrar o programa ...\n");
+        printf("\nEscolha a sua area:\n");
+        printf("1 - Gestor\n");
+        printf("2 - Cliente\n");
+        printf("3 - Sair do programa\n");
+        scanf("%s", userType);
+
+        if (strcmp(userType, "1") == 0) // Area dos gestores
+        {
+            printf("\nEscolha uma opcao:\n");
+            printf("1 - Registar\n");
+            printf("2 - Login\n");
+            printf("3 - Sair\n");
+            scanf("%d", &option);
+            switch (option)
+            {
+            case 1:
+                registerManager();
+                break;
+            case 2:
+                loginManager();
+                break;
+            case 3:
+                printf("A voltar ao 1 menu ...\n");
+                break;
+            default:
+                printf("Opcao invalida, tente novamente.\n");
+            }
+        }
+        else if (strcmp(userType, "2") == 0)  // Area dos clientes
+        {
+            printf("\nEscolha uma opcao:\n");
+            printf("1 - Registar\n");
+            printf("2 - Login\n");
+            printf("3 - Sair\n");
+            scanf("%d", &option);
+            switch (option)
+            {
+            case 1:
+                registerCustomer();
+                break;
+            case 2:
+                loginCustomer();
+                break;
+            case 3:
+                printf("A voltar ao 1 menu ...\n");
+                break;
+            default:
+                printf("Opcao invalida, tente novamente.\n");
+            }
+        }
+        else if (strcmp(userType, "3") == 0) // Area de saida do programa
+        {
+            printf("A encerrar ...\n");
+            exit(0);
+            break;
+        }
+        else
+        {
+            printf("Tipo de utilizador invalido, tente novamente.\n");
+        }
+    };
+
     return 0;
 }
-
-// Menu inicial
-void startMenu()
-{
-    int optionMenu;
-    printf("\nBem-vindo!\n");
-    printf("Escolha a sua area.\n");
-    printf("1 - Area do gestor\n");
-    printf("2 - Area do cliente\n");
-    scanf("%d", &optionMenu);
-    switch (optionMenu)
-    {
-    case 1:
-        printf("Entrou na area do gestor.\n");
-        choice = 1;
-        break;
-    case 2:
-        printf("Entrou na area do cliente.\n");
-        choice = 2;
-        break;
-    default:
-        printf("Erro! Escolha invalida.\n");
-        choice = 0;
-        break;
-    }
-}
-
-// Registo do cliente
-void customerRegistration(struct customer *u)
-{
-    static int currentId = 0;
-    u->customerId = ++currentId;
-    printf("Insira o seu nome: ");
-    scanf("%s", u->name);
-    printf("Insira a sua morada: ");
-    scanf("%s", u->address);
-    u->balance = 0.0;
-    printf("Insira o nome: ");
-    scanf("%d", u->NIF);
-    FILE *archive = fopen("customers.txt", "a");
-    if (archive == NULL)
-    {
-        printf("Erro ao abrir o ficheiro!\n");
-        return;
-    }
-    fprintf(archive, "%d;%s;%s;%f;%d\n", u->customerId, u->name, u->address, u->balance, u->NIF);
-    fclose(archive);
-    printf("Cliente registado com sucesso!\n");
-}
-
-// Codigo por acabar, colocar em principio na linha 30.
-/*
-    if (choice == 1) {
-        printf("Ja esta registado no sistema (S/N)? ");
-        scanf(" %c", &answer);
-        if (answer=='S' || answer=='s') {
-            // Sistema de login
-        } else if (answer=='N' || answer=='n') {
-            // Sistema de registo, mas que a conta fica inativa ate que outro gestor a ative.
-        } else {
-            printf("Erro! Escolha invalida.\n");
-        }
-    }
-*/
