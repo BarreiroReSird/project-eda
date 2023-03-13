@@ -4,114 +4,32 @@
 #include <limits.h>
 #include "archive.h"
 
-Customer customers[MAX_USERS];
-int totalCustomers = 0;
-int currentCustomerIndex = -1;
+// Variáveis globais
+int currentManagerId = -1; // Armazena o ID do gestor logado;
+int managerLoginStatus = 0;
 
-Manager managers[MAX_USERS];
+int menu()
+{
+    int optionMenu;
+    printf("MENU:\n");
+    printf("1 (Inserir Meio)\n"); //  Insere novo meio
+    printf("2 (Listar Meios)\n"); //  Lista todos os meios
+    printf("3 (Remover Meio)\n"); //  Remove um meio
+    printf("4 (Guardar Meio)\n"); //  ??
+    printf("5 (Ler Meios)\n");    //  ??
+    printf("0 (Sair)\n");         //  Volta ao inicio
+    printf("Opcao:\n");
+    scanf("%d", &optionMenu);
+    return (optionMenu);
+}
+
+Manager managers[MAX_USERS]; // MAX_USERS = 100
 int totalManagers = 0;
 int currentManagerIndex = -1;
 
-int currentManagerId = -1; // Variável global para armazenar o ID do gestor logado
-
-void registerCustomer()
-{
-    if (totalCustomers >= MAX_USERS)
-    {
-        printf("Limite de clientes atingido.\n");
-        return;
-    }
-
-    Customer newCustomer;
-    printf("Digite o nome do utilizador: ");
-    scanf("%s", newCustomer.name);
-    printf("Digite a senha: ");
-    scanf("%s", newCustomer.password);
-
-    // A função "fflush(stdin)" limpa o buffer do teclado antes de utilizar a função "fgets()"
-    // A função "strcspn()" substitui o caracter da nova linha por \0 para remover esse caracter da string
-    printf("Digite a morada: ");
-    fflush(stdin);
-    fgets(newCustomer.address, 50, stdin);
-    newCustomer.address[strcspn(newCustomer.address, "\n")] = '\0';
-
-    printf("Digite o NIF: ");
-    scanf("%d", &newCustomer.NIF);
-
-    newCustomer.balance = 0.0;
-    newCustomer.id = totalCustomers + 1;
-    newCustomer.active = 1;
-
-    FILE *file = fopen("archive.txt", "a");
-    if (file == NULL)
-    {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
-
-    fprintf(file, "cliente|%s|%s|%s|%d|%.2f|%d|\n", newCustomer.name, newCustomer.password, newCustomer.address, newCustomer.NIF, newCustomer.balance, newCustomer.id);
-
-    fclose(file);
-
-    totalCustomers++;
-
-    printf("Cliente registado com sucesso!\n");
-}
-
-void loginCustomer()
-{
-    char name[50];
-    char password[50];
-
-    printf("Digite o nome do utilizador: ");
-    scanf("%s", name);
-    printf("Digite a senha: ");
-    scanf("%s", password);
-
-    FILE *file = fopen("archive.txt", "r");
-    if (file == NULL)
-    {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
-
-    char line[256];
-    int i = 0;
-    while (fgets(line, sizeof(line), file))
-    {
-        if (strncmp(line, "cliente|", 8) == 0)
-        {
-            Customer customer;
-            char *token = strtok(line + 8, "|");
-            strcpy(customer.name, token);
-            token = strtok(NULL, "|");
-            strcpy(customer.password, token);
-            token = strtok(NULL, "|");
-            strcpy(customer.address, token);
-            token = strtok(NULL, "|");
-            customer.NIF = atoi(token);
-            token = strtok(NULL, "|");
-            customer.balance = atof(token);
-            token = strtok(NULL, "|");
-            customer.id = atoi(token);
-            token = strtok(NULL, "|");
-
-            if (strcmp(customer.name, name) == 0 && strcmp(customer.password, password) == 0 && customer.active)
-            {
-                currentCustomerIndex = i;
-                fclose(file);
-                printf("Login realizado com sucesso!\n");
-                return;
-            }
-
-            i++;
-        }
-    }
-
-    fclose(file);
-
-    printf("Nome do utilizador ou senha inválidos, ou conta inativa.\n");
-}
+Customer customers[MAX_USERS]; // MAX_USERS = 100
+int totalCustomers = 0;
+int currentCustomerIndex = -1;
 
 void registerManager()
 {
@@ -122,8 +40,8 @@ void registerManager()
     scanf("%s", newManager.password);
 
     // Define o próximo ID disponível para gestores registrados
-    int nextId = 1; // Valor padrão, caso não existam gestores registrados
-    int hasActive = 0; // Flag para verificar se existe algum gestor ativo
+    int nextId = 1;              // Valor padrão, caso não existam gestores registrados
+    int hasActive = 0;           // Flag para verificar se existe algum gestor ativo
     int minInactiveId = INT_MAX; // ID do gestor inativo com menor valor
     FILE *file = fopen("archive.txt", "r");
     if (file != NULL)
@@ -233,12 +151,14 @@ void loginManager()
                         currentManagerId = managerId;
                         fclose(file);
                         printf("Login realizado com sucesso!\n");
+                        managerLoginStatus = 1;
                         return;
                     }
                     else
                     {
                         fclose(file);
                         printf("A sua conta esta inativa. Por favor, contacte um gestor para que a ative.\n");
+                        managerLoginStatus = 2;
                         return;
                     }
                 }
@@ -248,4 +168,153 @@ void loginManager()
 
     fclose(file);
     printf("Erro - Nome ou password invalidos.\n");
+}
+
+void registerCustomer()
+{
+    if (totalCustomers >= MAX_USERS)
+    {
+        printf("Limite de clientes atingido.\n");
+        return;
+    }
+
+    Customer newCustomer;
+    printf("Digite o nome do utilizador: ");
+    scanf("%s", newCustomer.name);
+    printf("Digite a senha: ");
+    scanf("%s", newCustomer.password);
+
+    // A função "fflush(stdin)" limpa o buffer do teclado antes de utilizar a função "fgets()"
+    // A função "strcspn()" substitui o caracter da nova linha por \0 para remover esse caracter da string
+    printf("Digite a morada: ");
+    fflush(stdin);
+    fgets(newCustomer.address, 50, stdin);
+    newCustomer.address[strcspn(newCustomer.address, "\n")] = '\0';
+
+    printf("Digite o NIF: ");
+    scanf("%d", &newCustomer.NIF);
+
+    newCustomer.balance = 0.0;
+    newCustomer.id = totalCustomers + 1;
+    newCustomer.active = 1;
+
+    FILE *file = fopen("archive.txt", "a");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    fprintf(file, "cliente|%s|%s|%s|%d|%.2f|%d|\n", newCustomer.name, newCustomer.password, newCustomer.address, newCustomer.NIF, newCustomer.balance, newCustomer.id);
+
+    fclose(file);
+
+    totalCustomers++;
+
+    printf("Cliente registado com sucesso!\n");
+}
+
+void loginCustomer()
+{
+    char name[50];
+    char password[50];
+
+    printf("Digite o nome do utilizador: ");
+    scanf("%s", name);
+    printf("Digite a senha: ");
+    scanf("%s", password);
+
+    FILE *file = fopen("archive.txt", "r");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    char line[256];
+    int i = 0;
+    while (fgets(line, sizeof(line), file))
+    {
+        if (strncmp(line, "cliente|", 8) == 0)
+        {
+            Customer customer;
+            char *token = strtok(line + 8, "|");
+            strcpy(customer.name, token);
+            token = strtok(NULL, "|");
+            strcpy(customer.password, token);
+            token = strtok(NULL, "|");
+            strcpy(customer.address, token);
+            token = strtok(NULL, "|");
+            customer.NIF = atoi(token);
+            token = strtok(NULL, "|");
+            customer.balance = atof(token);
+            token = strtok(NULL, "|");
+            customer.id = atoi(token);
+            token = strtok(NULL, "|");
+
+            if (strcmp(customer.name, name) == 0 && strcmp(customer.password, password) == 0 && customer.active)
+            {
+                currentCustomerIndex = i;
+                fclose(file);
+                printf("Login realizado com sucesso!\n");
+                return;
+            }
+
+            i++;
+        }
+    }
+
+    fclose(file);
+
+    printf("Nome do utilizador ou senha inválidos, ou conta inativa.\n");
+}
+
+void addVehicle()
+{
+    Vehicle newVehicle;
+    printf("Digite o tipo do veiculo: ");
+    scanf("%s", newVehicle.type);
+    printf("Digite a carga da bateria: ");
+    scanf("%f", &newVehicle.battery);
+    printf("Digite a autonomia do veiculo: ");
+    scanf("%f", &newVehicle.autonomy);
+
+    int nextId = 1; // Valor padrão, caso não existam veículos registrados
+    FILE *file = fopen("archive.txt", "r");
+    if (file != NULL)
+    {
+        char line[100];
+        while (fgets(line, sizeof(line), file))
+        {
+            char *token = strtok(line, "|");
+            if (strcmp(token, "meio") == 0)
+            {
+                token = strtok(NULL, "|"); // Tipo do veículo
+                token = strtok(NULL, "|"); // Carga da bateria
+                token = strtok(NULL, "|"); // Autonomia do veículo
+                token = strtok(NULL, "|"); // ID do veículo
+                int id = atoi(token);
+                if (id >= nextId)
+                {
+                    nextId = id + 1;
+                }
+            }
+        }
+        fclose(file);
+    }
+
+    newVehicle.id = nextId;
+
+    file = fopen("archive.txt", "a");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    fprintf(file, "meio|%s|%.2f|%.2f|%d|\n", newVehicle.type, newVehicle.battery, newVehicle.autonomy, newVehicle.id);
+
+    fclose(file);
+
+    printf("Veiculo adicionado com sucesso!\n");
 }

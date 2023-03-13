@@ -1,9 +1,10 @@
-#ifndef ARCHIVE_H_INCLUDED
-#define ARCHIVE_H_INCLUDED
+#ifndef ARCHIVE_H
+#define ARCHIVE_H
 
 #define MAX_USERS 100
 
-typedef struct {
+typedef struct
+{
     int id;
     char name[50];
     char password[50];
@@ -13,16 +14,28 @@ typedef struct {
     int active;
 } Customer;
 
-typedef struct {
+typedef struct
+{
     int id;
     char name[50];
     char password[50];
     int active;
 } Manager;
 
-void registerCustomer();
-void loginCustomer();
+typedef struct
+{
+    int id;
+    int code;
+    char type[50];
+    float battery;
+    float autonomy;
+} Vehicle;
+
+int menu();
 void registerManager();
 void loginManager();
+void registerCustomer();
+void loginCustomer();
+void addVehicle();
 
-#endif // ARCHIVE_H_INCLUDED
+#endif // ARCHIVE_H
