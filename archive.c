@@ -5,20 +5,21 @@
 #include "archive.h"
 
 // Variáveis globais
-int currentManagerId = -1; // Armazena o ID do gestor logado;
-int managerLoginStatus = 0;
+int currentManagerId = -1;  // Armazena o ID do gestor logado;
+int managerLoginStatus = 0; // Armazena se o login do gestor foi bem sucedido;
 
 int menu()
 {
     int optionMenu;
-    printf("MENU:\n");
-    printf("1 (Inserir Meio)\n"); //  Insere novo meio
-    printf("2 (Listar Meios)\n"); //  Lista todos os meios
-    printf("3 (Remover Meio)\n"); //  Remove um meio
-    printf("4 (Guardar Meio)\n"); //  ??
-    printf("5 (Ler Meios)\n");    //  ??
-    printf("0 (Sair)\n");         //  Volta ao inicio
-    printf("Opcao:\n");
+    printf("\nMENU:\n");
+    printf("1 (Inserir Meio)\n");    //  Insere novo meio
+    printf("2 (Listar Meios)\n");    //  Lista todos os meios
+    printf("3 (Remover Meio)\n");    //  Remove um meio
+    printf("4 (Guardar Meio)\n");    //  ??
+    printf("5 (Ler Meios)\n");       //  ??
+    printf("6 (Ativar gestores)\n"); // Ativa contas de gestores criadas mas inativas
+    printf("0 (Sair)\n");            //  Volta ao inicio
+    printf("\nOpcao:");
     scanf("%d", &optionMenu);
     return (optionMenu);
 }
@@ -34,15 +35,15 @@ int currentCustomerIndex = -1;
 void registerManager()
 {
     Manager newManager;
-    printf("Digite o nome do utilizador: ");
+    printf("\nDigite o nome do utilizador: ");
     scanf("%s", newManager.name);
     printf("Digite a senha: ");
     scanf("%s", newManager.password);
 
     // Define o próximo ID disponível para gestores registrados
     int nextId = 1;              // Valor padrão, caso não existam gestores registrados
-    int hasActive = 0;           // Flag para verificar se existe algum gestor ativo
-    int minInactiveId = INT_MAX; // ID do gestor inativo com menor valor
+    int hasActive = 0;           // Verifica se existe algum gestor ativo
+    int minInactiveId = INT_MAX; // ID do gestor inativo com valor mais baixo
     FILE *file = fopen("archive.txt", "r");
     if (file != NULL)
     {
@@ -113,7 +114,7 @@ void loginManager()
 {
     // Pergunta os dados de login
     Manager managerInfo;
-    printf("Insira o seu nome: ");
+    printf("\nInsira o seu nome: ");
     scanf("%s", managerInfo.name);
     printf("Insira a sua password: ");
     scanf("%s", managerInfo.password);
@@ -157,7 +158,7 @@ void loginManager()
                     else
                     {
                         fclose(file);
-                        printf("A sua conta esta inativa. Por favor, contacte um gestor para que a ative.\n");
+                        printf("A sua conta esta inativa.\n");
                         managerLoginStatus = 2;
                         return;
                     }
@@ -219,7 +220,7 @@ void loginCustomer()
     char name[50];
     char password[50];
 
-    printf("Digite o nome do utilizador: ");
+    printf("\nDigite o nome do utilizador: ");
     scanf("%s", name);
     printf("Digite a senha: ");
     scanf("%s", password);
@@ -317,4 +318,33 @@ void addVehicle()
     fclose(file);
 
     printf("Veiculo adicionado com sucesso!\n");
+}
+
+void listVehicles()
+{
+    FILE *file = fopen("archive.txt", "r");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    char line[100];
+    printf("\nTipo|Bateria|Autonomia|ID\n");
+    while (fgets(line, sizeof(line), file))
+    {
+        char *token = strtok(line, "|");
+        if (strcmp(token, "meio") == 0)
+        {
+            token = strtok(NULL, "|"); // Tipo do veículo
+            printf("%s|", token);
+            token = strtok(NULL, "|"); // Carga da bateria
+            printf("%.2f|", atof(token));
+            token = strtok(NULL, "|"); // Autonomia do veículo
+            printf("%.2f|", atof(token));
+            token = strtok(NULL, "|"); // ID do veículo
+            printf("%s\n", token);
+        }
+    }
+    fclose(file);
 }

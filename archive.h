@@ -37,5 +37,6 @@ void loginManager();
 void registerCustomer();
 void loginCustomer();
 void addVehicle();
+void listVehicles();
 
 #endif // ARCHIVE_H

@@ -9,3 +9,6 @@ meio|Bicicleta|68.00|34.00|2|
 meio|Trotinete|23.00|5.00|3|
 meio|qwertyuiop|123456792.00|123456792.00|4|
 meio|iklo|123.00|12.00|5|
+gestor|Tome|1234|6|0|
+gestor|Marco|1234|7|0|
+cliente|Guilherme|1234|Rua Guilherme|123456789|0.00|1|

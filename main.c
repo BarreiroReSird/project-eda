@@ -4,34 +4,37 @@
 #include <limits.h>
 #include "archive.h"
 
-extern int managerLoginStatus;
+extern int managerLoginStatus; // Variavel externa que guarda se o login do gestor foi bem sucedido ou não;
 
 int main()
 {
     int userType = 0, userChoice = 0; // userType -> Gestor ou Cliente, userChoice -> Registo ou Login;
 
-    printf("Bem-vindo!\n");
+    printf("\nBem-vindo!\n");
 
     while (1) // Loop sem condição;
     {
         printf("\nMENU - Area\n");
-        printf("1 - Gestor\n");
-        printf("2 - Cliente\n");
-        printf("3 - Sair do programa\n");
-        printf("\nEscolha a sua area:\n");
+        printf("1 (Gestor)\n");
+        printf("2 (Cliente)\n");
+        printf("0 (Sair)\n");
+        printf("\nEscolha a sua area:");
         scanf("%d", &userType);
 
         if (userType == 1) // Area dos gestores
         {
-            printf("\nMENU - Procedimento\n");
+            printf("\nMENU\n");
             printf("1 - Registar\n");
             printf("2 - Login\n");
-            printf("3 - Sair\n");
-            printf("\nEscolha o procedimento que deseja realizar:\n");
+            printf("0 - Voltar\n");
+            printf("\nEscolha o que deseja realizar:");
             scanf("%d", &userChoice);
 
             switch (userChoice)
             {
+            case 0:
+                printf("\nA voltar ao 1 menu ...\n");
+                break;
             case 1:
                 registerManager();
                 break;
@@ -46,42 +49,44 @@ int main()
                     case 1:
                         addVehicle();
                         break;
+                    case 2:
+                        listVehicles();
+                        break;
                     default:
                         printf("Opcao invalida, tente novamente.\n");
                     }
                 }
                 managerLoginStatus = 0;
                 break;
-            case 3:
-                printf("A voltar ao 1 menu ...\n");
-                break;
             default:
-                printf("Opcao invalida, tente novamente.\n");
+                printf("\nErro! Escolha invalida.\n");
+                printf("A voltar ao 1 menu ...\n");
             }
         }
         else if (userType == 2) // Area dos clientes
         {
-            printf("\nEscolha uma opcao:\n");
-            printf("1 - Registar\n");
+            printf("\n1 - Registar\n");
             printf("2 - Login\n");
-            printf("3 - Sair\n");
+            printf("0 - Sair\n");
+            printf("\nEscolha uma opcao:");
             scanf("%d", &userChoice);
             switch (userChoice)
             {
+            case 0:
+                printf("A voltar ao 1 menu ...\n");
+                break;
             case 1:
                 registerCustomer();
                 break;
             case 2:
                 loginCustomer();
                 break;
-            case 3:
-                printf("A voltar ao 1 menu ...\n");
-                break;
             default:
-                printf("Opcao invalida, tente novamente.\n");
+                printf("\nErro! Escolha invalida.\n");
+                printf("A voltar ao 1 menu ...\n");
             }
         }
-        else if (userType == 3) // Area de saida do programa
+        else if (userType == 0) // Area de saida do programa
         {
             printf("A encerrar ...\n");
             exit(0);
@@ -95,3 +100,6 @@ int main()
 
     return 0;
 };
+
+// Login cliente não funciona;
+// Ao criar meio, na bateria posso colocar bateria infinita, bloquear a 100 (%);
