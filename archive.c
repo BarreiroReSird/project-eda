@@ -8,7 +8,7 @@
 int currentManagerId = -1;  // Armazena o ID do gestor logado;
 int managerLoginStatus = 0; // Armazena se o login do gestor foi bem sucedido;
 
-int menu()
+int menuVehicle()
 {
     int optionMenu;
     printf("\nMENU:\n");
@@ -22,6 +22,30 @@ int menu()
     printf("\nOpcao:");
     scanf("%d", &optionMenu);
     return (optionMenu);
+}
+
+int menuArea()
+{
+    int userType = 0;
+    printf("\nMENU - Area\n");
+    printf("1 (Gestor)\n");
+    printf("2 (Cliente)\n");
+    printf("0 (Sair)\n");
+    printf("\nEscolha a sua area:");
+    scanf("%d", &userType);
+    return (userType);
+}
+
+int menuRegLog()
+{
+    int userChoice = 0;
+    printf("\nMENU\n");
+    printf("1 - Registar\n");
+    printf("2 - Login\n");
+    printf("0 - Voltar\n");
+    printf("\nEscolha o que deseja realizar:");
+    scanf("%d", &userChoice);
+    return (userChoice);
 }
 
 Manager managers[MAX_USERS]; // MAX_USERS = 100
@@ -347,4 +371,56 @@ void listVehicles()
         }
     }
     fclose(file);
+}
+
+void removeVehicle()
+{
+    int idToRemove;
+    printf("Digite o ID do veiculo que deseja remover: ");
+    scanf("%d", &idToRemove);
+
+    FILE *file = fopen("archive.txt", "r");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    FILE *tempFile = fopen("temp.txt", "w");
+    if (tempFile == NULL)
+    {
+        printf("Erro ao abrir o arquivo temporario.\n");
+        return;
+    }
+
+    char line[100];
+    int vehicleRemoved = 0;
+    while (fgets(line, sizeof(line), file))
+    {
+        int id;
+        sscanf(line, "%*[^|]|%*[^|]|%*f|%*f|%d|", &id);
+        if (id == idToRemove)
+        {
+            vehicleRemoved = 1;
+        }
+        else
+        {
+            fprintf(tempFile, "%s", line);
+        }
+    }
+
+    fclose(file);
+    fclose(tempFile);
+
+    if (vehicleRemoved)
+    {
+        remove("archive.txt");
+        rename("temp.txt", "archive.txt");
+        printf("Veiculo removido com sucesso!\n");
+    }
+    else
+    {
+        remove("temp.txt");
+        printf("Nao foi encontrado nenhum veiculo com o ID informado.\n");
+    }
 }

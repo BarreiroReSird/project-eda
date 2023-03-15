@@ -1,34 +1,22 @@
 #include <stdio.h>
-#include <string.h>
+// #include <string.h>
 #include <stdlib.h>
-#include <limits.h>
+// #include <limits.h>
 #include "archive.h"
 
 extern int managerLoginStatus; // Variavel externa que guarda se o login do gestor foi bem sucedido ou não;
 
 int main()
 {
-    int userType = 0, userChoice = 0; // userType -> Gestor ou Cliente, userChoice -> Registo ou Login;
-
     printf("\nBem-vindo!\n");
 
     while (1) // Loop sem condição;
     {
-        printf("\nMENU - Area\n");
-        printf("1 (Gestor)\n");
-        printf("2 (Cliente)\n");
-        printf("0 (Sair)\n");
-        printf("\nEscolha a sua area:");
-        scanf("%d", &userType);
+        int userType = menuArea();
 
         if (userType == 1) // Area dos gestores
         {
-            printf("\nMENU\n");
-            printf("1 - Registar\n");
-            printf("2 - Login\n");
-            printf("0 - Voltar\n");
-            printf("\nEscolha o que deseja realizar:");
-            scanf("%d", &userChoice);
+            int userChoice = menuRegLog();
 
             switch (userChoice)
             {
@@ -42,18 +30,31 @@ int main()
                 loginManager();
                 if (managerLoginStatus == 1)
                 {
-                    managerLoginStatus = 0;
-                    int optionMenu = menu();
-                    switch (optionMenu)
+                    while (1)
                     {
-                    case 1:
-                        addVehicle();
-                        break;
-                    case 2:
-                        listVehicles();
-                        break;
-                    default:
-                        printf("Opcao invalida, tente novamente.\n");
+                        managerLoginStatus = 0;
+                        int optionMenu = menuVehicle();
+                        switch (optionMenu)
+                        {
+                        case 0:
+                            printf("\n(W1) A voltar ao 1 menu ...\n");
+                            break;
+                        case 1:
+                            addVehicle();
+                            break;
+                        case 2:
+                            listVehicles();
+                            break;
+                        case 3:
+                            removeVehicle();
+                            break;
+                        default:
+                            printf("Opcao invalida, tente novamente.\n");
+                        }
+                        if (optionMenu == 0)
+                        {
+                            break;
+                        }
                     }
                 }
                 managerLoginStatus = 0;
@@ -65,11 +66,8 @@ int main()
         }
         else if (userType == 2) // Area dos clientes
         {
-            printf("\n1 - Registar\n");
-            printf("2 - Login\n");
-            printf("0 - Sair\n");
-            printf("\nEscolha uma opcao:");
-            scanf("%d", &userChoice);
+            int userChoice = menuRegLog();
+
             switch (userChoice)
             {
             case 0:

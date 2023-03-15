@@ -31,12 +31,15 @@ typedef struct
     float autonomy;
 } Vehicle;
 
-int menu();
+int menuVehicle();
+int menuArea();
+int menuRegLog();
 void registerManager();
 void loginManager();
 void registerCustomer();
 void loginCustomer();
 void addVehicle();
 void listVehicles();
+void removeVehicle();
 
 #endif // ARCHIVE_H
