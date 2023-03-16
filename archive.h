@@ -1,45 +1,40 @@
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
-#define MAX_USERS 100
-
+typedef struct
+{
+    int id;
+    char type[20];
+    int battery;
+    float price;
+    char geocode[20];
+} ElectricMobilityVehicle;
 typedef struct
 {
     int id;
     char name[50];
-    char password[50];
-    float balance;
     char address[100];
-    int NIF;
-    int active;
+    char nif[9];
+    float balance;
 } Customer;
-
 typedef struct
 {
     int id;
     char name[50];
-    char password[50];
+    char password[20];
     int active;
 } Manager;
 
-typedef struct
+typedef struct ManagerNode
 {
-    int id;
-    int code;
-    char type[50];
-    float battery;
-    float autonomy;
-} Vehicle;
+    Manager manager;
+    struct ManagerNode *next;
+} ManagerNode;
 
-int menuVehicle();
-int menuArea();
-int menuRegLog();
-void registerManager();
-void loginManager();
-void registerCustomer();
-void loginCustomer();
-void addVehicle();
-void listVehicles();
-void removeVehicle();
+void menuArea();
+void menuSignIn();
+void menuVehicles();
+void registerManager(ManagerNode **head);
+Manager *login(ManagerNode *head);
 
 #endif // ARCHIVE_H
