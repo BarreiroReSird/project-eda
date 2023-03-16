@@ -8,6 +8,19 @@ int userTypeGlobal;
 int signInTypeGlobal;
 int managerTaskGlobal;
 
+typedef struct CustomerNode
+{
+    int id;
+    char name[50];
+    char password;
+    char address[100];
+    char nif[9];
+    float balance;
+    struct CustomerNode *next;
+} CustomerNode;
+
+CustomerNode *head = NULL;
+
 void menuArea()
 {
     while (1)
@@ -58,12 +71,14 @@ void menuSignIn()
             printf("\nA abrir a plataforma de registo...\n");
             if (userTypeGlobal == 1)
             {
+                // Registo do gestor
                 ManagerNode *head = NULL; // inicializa a lista com NULL;
                 registerManager(&head);   // Chama a função do login;
             }
             if (userTypeGlobal == 2)
             {
                 // Registo do cliente
+                void registerCustomer();
             }
             menuSignIn();
         case 2:
@@ -72,11 +87,12 @@ void menuSignIn()
             {
                 // Login do gestor
                 printf("\nLogin bem sucedido!\n");
-                menuVehicles(); // Abrir o menu dos meios (imaginado que o login funciona)
+                menuVehicles(); // Abrir o menu dos ElectricMobilityVehicles (imaginado que o login funciona)
             }
             if (userTypeGlobal == 2)
             {
                 // Login do cliente
+                void loginCustomer();
             }
             menuSignIn();
         default:
@@ -92,11 +108,11 @@ void menuVehicles()
     {
         printf("\n>>> MENU 3 <<<\n"); // Menu apenas de gestores
         printf("Escolhas disponiveis:\n");
-        printf("1 (Ativar gestores)\n"); // Ativa contas de gestores criadas mas inativas
-        printf("2 (Inserir Meio)\n");    //  Insere novo meio;
-        printf("3 (Remover Meio)\n");    //  Remove um meio;
-        printf("4 (Listar Meios)\n");    //  Pergunta se lista meios temporarios ou persistentes;
-        printf("0 (Sair)\n");            //  Volta ao menu 1 (Area)
+        printf("1 (Ativar gestores)\n");                 // Ativa contas de gestores criadas mas inativas
+        printf("2 (Inserir ElectricMobilityVehicle)\n"); //  Insere novo ElectricMobilityVehicle;
+        printf("3 (Remover ElectricMobilityVehicle)\n"); //  Remove um ElectricMobilityVehicle;
+        printf("4 (Listar ElectricMobilityVehicles)\n"); //  Pergunta se lista ElectricMobilityVehicles temporarios ou persistentes;
+        printf("0 (Sair)\n");                            //  Volta ao menu 1 (Area)
         printf("\nO que deseja fazer:\n");
         scanf("%d", &managerTaskGlobal);
         ElectricMobilityVehicle *head = NULL;
@@ -108,12 +124,20 @@ void menuVehicles()
         case 1:
             // Ativar gestores
         case 2:
-            // Inserir novo meio
+            // Inserir novo ElectricMobilityVehicle
             addElectricMobilityVehicle(&head);
+            break;
+            // menuVehicles();
         case 3:
-            // Remover meio
+            // Remover ElectricMobilityVehicle
+            removeElectricMobilityVehicle(&head);
+            break;
+            // menuVehicles();
         case 4:
-            // Listar todos meio
+            // Listar todos ElectricMobilityVehicle
+            listElectricMobilityVehicles(head);
+            break;
+            // menuVehicles();
         default:
             printf("\nErro, escolha invalida.\n");
             break;
@@ -124,9 +148,9 @@ void menuVehicles()
 void registerManager(ManagerNode **head)
 {
     Manager newManager;
-    printf("\nDigite o nome do utilizador: ");
+    printf("\nInsira o nome do utilizador: ");
     scanf("%s", newManager.name);
-    printf("Digite a senha: ");
+    printf("Insira a senha: ");
     scanf("%s", newManager.password);
 
     // Define o próximo ID disponível para gestores registrados
@@ -140,7 +164,7 @@ void registerManager(ManagerNode **head)
         {
             printf("Já existe um gestor com esse nome.\n");
             menuSignIn();
-            // return;
+            return;
         }
         if (current->manager.id >= nextId)
         {
@@ -198,13 +222,13 @@ void registerManager(ManagerNode **head)
     menuSignIn();
 }
 
-Manager *login(ManagerNode *head)
+Manager *loginManager(ManagerNode *head)
 {
     char name[20];
     char password[20];
-    printf("\nDigite o nome do utilizador: ");
+    printf("\nInsira o nome do utilizador: ");
     scanf("%s", name);
-    printf("Digite a senha: ");
+    printf("Insira a senha: ");
     scanf("%s", password);
 
     ManagerNode *current = head;
@@ -222,44 +246,155 @@ Manager *login(ManagerNode *head)
     return NULL;
 }
 
-void addElectricMobilityVehicle(ElectricMobilityVehicle **head)
+void registerCustomer()
 {
-    ElectricMobilityVehicle *new_vehicle = malloc(sizeof(ElectricMobilityVehicle));
-    if (new_vehicle == NULL)
+    char name[50];
+    char password[50];
+    char address[100];
+    char nif[9];
+
+    printf("Insira o nome do utilizador: ");
+    scanf("%s", name);
+    printf("Insira a senha: ");
+    scanf("%s", password);
+    printf("Insira a morada: ");
+    fflush(stdin);
+    fgets(address, 100, stdin);
+    address[strcspn(address, "\n")] = '\0';
+    printf("Insira o NIF: ");
+    scanf("%s", nif);
+
+    CustomerNode *newCustomer = malloc(sizeof(CustomerNode));
+    newCustomer->id = head == NULL ? 1 : head->id + 1;
+    strcpy(newCustomer->name, name);
+    strcpy(&newCustomer->password, password);
+    strcpy(newCustomer->address, address);
+    strcpy(newCustomer->nif, nif);
+    newCustomer->balance = 0.0;
+    newCustomer->next = NULL;
+
+    if (head == NULL)
     {
-        printf("Erro ao alocar memória para novo veículo.\n");
-        return;
-    }
-
-    printf("\nAdicionar novo veículo elétrico de mobilidade:\n");
-
-    // Lê os dados do novo veículo
-    printf("ID: ");
-    scanf("%d", &new_vehicle->id);
-    printf("Tipo: ");
-    scanf("%s", new_vehicle->type);
-    printf("Bateria: ");
-    scanf("%d", &new_vehicle->battery);
-    printf("Preço: ");
-    scanf("%f", &new_vehicle->price);
-    printf("Geocódigo: ");
-    scanf("%s", new_vehicle->geocode);
-
-    // Adiciona o novo veículo ao final da lista
-    new_vehicle->next = NULL;
-    if (*head == NULL)
-    {
-        *head = new_vehicle;
+        head = newCustomer;
     }
     else
     {
-        ElectricMobilityVehicle *current = *head;
+        CustomerNode *current = head;
         while (current->next != NULL)
         {
             current = current->next;
         }
-        current->next = new_vehicle;
+        current->next = newCustomer;
     }
 
-    printf("\nNovo veículo adicionado com sucesso!\n");
+    printf("Cliente registado com sucesso!\n");
+}
+
+void loginCustomer()
+{
+    char name[50];
+    char password[50];
+
+    printf("Insira o nome do utilizador: ");
+    scanf("%s", name);
+    printf("Insira a senha: ");
+    scanf("%s", password);
+
+    CustomerNode *current = head;
+    while (current != NULL)
+    {
+        if (strcmp(current->name, name) == 0 && strcmp(&current->password, password) == 0)
+        {
+            printf("Bem-vindo, %s!\n", current->name);
+            return;
+        }
+        current = current->next;
+    }
+
+    printf("Utilizador ou senha incorretos.\n");
+}
+
+// Insere meios na lista ligada
+void addElectricMobilityVehicle(ElectricMobilityVehicle **head)
+{
+    static int nextId = 1; // variável estática para gerar o id
+    ElectricMobilityVehicle *newVehicle = (ElectricMobilityVehicle *)malloc(sizeof(ElectricMobilityVehicle));
+
+    printf("Tipo de meio (bicicleta, trotinete, etc): ");
+    scanf("%s", newVehicle->type);
+    printf("Bateria restante: ");
+    scanf("%d", &newVehicle->battery);
+    printf("Custo: ");
+    scanf("%f", &newVehicle->price);
+    printf("Geocode: ");
+    scanf("%s", newVehicle->geocode);
+
+    // atribui o próximo id e incrementa o contador
+    newVehicle->id = nextId++;
+    newVehicle->next = *head;
+    *head = newVehicle;
+}
+
+// Listar o conteúdo da lista ligada
+void listElectricMobilityVehicles(ElectricMobilityVehicle *head)
+{
+    ElectricMobilityVehicle *current = head;
+    printf("\n--- Lista de meios ---\n");
+    while (current != NULL)
+    {
+        printf("ID: %d\n", current->id);
+        printf("Tipo: %s\n", current->type);
+        printf("Bateria: %d\n", current->battery);
+        printf("Custo: %.2f\n", current->price);
+        printf("Geocode: %s\n", current->geocode);
+        printf("\n");
+        current = current->next;
+    }
+}
+
+void removeElectricMobilityVehicle(ElectricMobilityVehicle **head)
+{
+    // Verifica se a lista ligada está vazia
+    if (*head == NULL)
+    {
+        printf("A lista ligada está vazia.\n");
+        return;
+    }
+
+    int id;
+    printf("Insira o ID do elemento a ser removido: ");
+    scanf("%d", &id);
+
+    ElectricMobilityVehicle *current = *head;
+    ElectricMobilityVehicle *previous = NULL;
+
+    // Procura o elemento na lista
+    while (current != NULL && current->id != id)
+    {
+        previous = current;
+        current = current->next;
+    }
+
+    // Se o elemento não foi encontrado, retorna
+    if (current == NULL)
+    {
+        printf("Elemento com o ID %d não encontrado.\n", id);
+        return;
+    }
+
+    // Remove o elemento da lista
+    if (previous == NULL)
+    {
+        // O elemento a ser removido é o primeiro da lista
+        *head = current->next;
+    }
+    else
+    {
+        previous->next = current->next;
+    }
+
+    // Libera a memória alocada para o elemento
+    free(current);
+
+    printf("Elemento com o ID %d removido com sucesso.\n", id);
 }

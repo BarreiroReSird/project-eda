@@ -5,16 +5,18 @@ typedef struct ElectricMobilityVehicle
 {
     int id;
     char type[20];
-    int battery;
-    
+    float battery;
+    float autonomy;
     float price;
     char geocode[20];
     struct ElectricMobilityVehicle *next;
 } ElectricMobilityVehicle;
+
 typedef struct
 {
     int id;
     char name[50];
+    char password;
     char address[100];
     char nif[9];
     float balance;
@@ -37,7 +39,11 @@ void menuArea();
 void menuSignIn();
 void menuVehicles();
 void registerManager(ManagerNode **head);
-Manager *login(ManagerNode *head);
+Manager *loginManager(ManagerNode *head);
+void registerCustomer();
+void loginCustomer();
 void addElectricMobilityVehicle(ElectricMobilityVehicle **head);
+void listElectricMobilityVehicles(ElectricMobilityVehicle *head);
+void removeElectricMobilityVehicle(ElectricMobilityVehicle **head);
 
 #endif // ARCHIVE_H
