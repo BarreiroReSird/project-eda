@@ -1,13 +1,15 @@
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
-typedef struct
+typedef struct ElectricMobilityVehicle
 {
     int id;
     char type[20];
     int battery;
+    
     float price;
     char geocode[20];
+    struct ElectricMobilityVehicle *next;
 } ElectricMobilityVehicle;
 typedef struct
 {
@@ -36,5 +38,6 @@ void menuSignIn();
 void menuVehicles();
 void registerManager(ManagerNode **head);
 Manager *login(ManagerNode *head);
+void addElectricMobilityVehicle(ElectricMobilityVehicle **head);
 
 #endif // ARCHIVE_H

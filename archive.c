@@ -71,6 +71,8 @@ void menuSignIn()
             if (userTypeGlobal == 1)
             {
                 // Login do gestor
+                printf("\nLogin bem sucedido!\n");
+                menuVehicles(); // Abrir o menu dos meios (imaginado que o login funciona)
             }
             if (userTypeGlobal == 2)
             {
@@ -97,6 +99,7 @@ void menuVehicles()
         printf("0 (Sair)\n");            //  Volta ao menu 1 (Area)
         printf("\nO que deseja fazer:\n");
         scanf("%d", &managerTaskGlobal);
+        ElectricMobilityVehicle *head = NULL;
         switch (managerTaskGlobal)
         {
         case 0:
@@ -106,6 +109,7 @@ void menuVehicles()
             // Ativar gestores
         case 2:
             // Inserir novo meio
+            addElectricMobilityVehicle(&head);
         case 3:
             // Remover meio
         case 4:
@@ -216,4 +220,46 @@ Manager *login(ManagerNode *head)
 
     printf("Nome de utilizador ou senha incorretos.\n");
     return NULL;
+}
+
+void addElectricMobilityVehicle(ElectricMobilityVehicle **head)
+{
+    ElectricMobilityVehicle *new_vehicle = malloc(sizeof(ElectricMobilityVehicle));
+    if (new_vehicle == NULL)
+    {
+        printf("Erro ao alocar memória para novo veículo.\n");
+        return;
+    }
+
+    printf("\nAdicionar novo veículo elétrico de mobilidade:\n");
+
+    // Lê os dados do novo veículo
+    printf("ID: ");
+    scanf("%d", &new_vehicle->id);
+    printf("Tipo: ");
+    scanf("%s", new_vehicle->type);
+    printf("Bateria: ");
+    scanf("%d", &new_vehicle->battery);
+    printf("Preço: ");
+    scanf("%f", &new_vehicle->price);
+    printf("Geocódigo: ");
+    scanf("%s", new_vehicle->geocode);
+
+    // Adiciona o novo veículo ao final da lista
+    new_vehicle->next = NULL;
+    if (*head == NULL)
+    {
+        *head = new_vehicle;
+    }
+    else
+    {
+        ElectricMobilityVehicle *current = *head;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = new_vehicle;
+    }
+
+    printf("\nNovo veículo adicionado com sucesso!\n");
 }
