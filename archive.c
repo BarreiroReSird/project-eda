@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "archive.h"
 #include <string.h>
+#include <math.h>
 
 // Variaveis globais
 int userTypeGlobal;
@@ -526,3 +527,194 @@ int loadElectricMobilityVehiclesFromFile(ElectricMobilityVehicle **head, const c
     printf("Dados guardados: %s\n", filename);
     return 0;
 }
+
+/*CODIGO TEMPORARIO PARA A FASE 1*/
+CustomerV2 *createCustomer(int id, char *name, char password, int NIF, float balance, char *address)
+{
+    CustomerV2 *newCustomer = (CustomerV2 *)malloc(sizeof(CustomerV2));
+    newCustomer->id = id;
+    strcpy(newCustomer->name, name);
+    newCustomer->password = password;
+    newCustomer->NIF = NIF;
+    newCustomer->balance = balance;
+    strcpy(newCustomer->address, address);
+    newCustomer->next = NULL;
+    return newCustomer;
+}
+
+void insertCustomer(CustomerV2 **head1, CustomerV2 *newCustomer)
+{
+    if (*head1 == NULL)
+    {
+        *head1 = newCustomer;
+    }
+    else
+    {
+        CustomerV2 *current = *head1;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = newCustomer;
+    }
+}
+
+void printList(CustomerV2 *head1)
+{
+    CustomerV2 *current = head1;
+    while (current != NULL)
+    {
+        printf("Id do cliente %d:\n", current->id);
+        printf("\tNome: %s\n", current->name);
+        printf("\tPassword: %c\n", current->password);
+        printf("\tNIF: %d\n", current->NIF);
+        printf("\tSaldo: %.2f\n", current->balance);
+        printf("\tMorada: %s\n", current->address);
+        current = current->next;
+    }
+}
+
+int checkData(CustomerV2 *head1)
+{
+    printf("\nA verificar integridade dos dados...\n");
+    CustomerV2 *current = head1;
+
+    while (current != NULL)
+    {
+        if (current->name == NULL)
+        {
+            printf("Nome do cliente invalido %d\n", current->id);
+            return 0;
+        }
+
+        if (current->password == '\0')
+        {
+            printf("Password do cliente invalida %d\n", current->id);
+            return 0;
+        }
+
+        if (current->NIF < 100000000 || current->NIF > 999999999)
+        {
+            printf("NIF invalido para o cliente com ID %d\n", current->id);
+            return 0;
+        }
+
+        if (isnan(current->balance))
+        {
+            printf("Saldo do cliente invalido %d\n", current->id);
+            return 0;
+        }
+
+        if (current->address == NULL)
+        {
+            printf("Morada do cliente invalida %d\n", current->id);
+            return 0;
+        }
+
+        current = current->next;
+    }
+
+    printf("\nTodos os dados necessarios foram inseridos corretamente!\n");
+    return 1;
+}
+
+int menuFase1()
+{
+    int choice;
+    printf("\n--> MENU <--\n");
+    printf("1 para inserir dados sobre os meios de mobilidade eletrica (Fase2: Apenas para Gestores)\n");
+    printf("2 para listar todos os dados sobre os meios de mobilidade eletrica\n");
+    // printf("1 para inserir meio\n");
+    // printf("2 Listar Meios\n");
+    // printf("3 Remover Meio\n");
+    // printf("4 Guardar Meios\n");
+    // printf("5 Ler Meios\n");
+    printf("0 para encerrar o programa\n");
+    printf("\nA sua escolha:");
+    scanf("%d", &choice);
+    return (choice);
+}
+
+void insertMobility(Mobility **head2)
+{
+    Mobility *newMobility = (Mobility *)malloc(sizeof(Mobility));
+
+    // Encontra o último ID existente
+    Mobility *temp = *head2;
+    int lastID = 0;
+    while (temp != NULL)
+    {
+        if (temp->id > lastID)
+        {
+            lastID = temp->id;
+        }
+        temp = temp->next;
+    }
+
+    // Adiciona 1 ao último ID existente para gerar o novo ID
+    newMobility->id = lastID + 1;
+
+    printf("Insira o tipo do meio de mobilidade: ");
+    scanf(" %s", &newMobility->type);
+
+    printf("Insira a carga da bateria (em %%): ");
+    scanf("%f", &newMobility->battery);
+
+    printf("Insira a autonomia (em km): ");
+    scanf("%f", &newMobility->autonomy);
+
+    printf("Insira o custo (por hora): ");
+    scanf("%f", &newMobility->price);
+
+    printf("Insira o geocodigo do meio de mobilidade: (What3Words sera aplicado brevemente)");
+    scanf(" %s", &newMobility->geocode);
+
+    newMobility->next = *head2;
+    *head2 = newMobility;
+}
+
+void listMobility(Mobility *head2)
+{
+    Mobility *current = head2;
+
+    if (current == NULL)
+    {
+        printf("\nNenhum meio de mobilidade encontrado!\n");
+    }
+    else
+    {
+        printf("\n--> Lista de meios de mobilidade <--\n");
+        printf("ID\tTipo\tBateria\tAutonomia\tPreco\tGeocode\n");
+
+        while (current != NULL)
+        {
+            printf("%d\t%s\t%.2f\t%.2f\t\t%.2f\t%s\n", current->id, current->type, current->battery, current->autonomy, current->price, current->geocode);
+            current = current->next;
+        }
+    }
+}
+
+void addBalance(CustomerV2 *head)
+{
+    int id;
+    float amount;
+    printf("Insira o ID do cliente: ");
+    scanf("%d", &id);
+    CustomerV2 *customer = findCustomer(head, id);
+    if (customer == NULL)
+    {
+        printf("Cliente não encontrado.\n");
+        return;
+    }
+    printf("Insira a quantia a ser adicionada ao saldo: ");
+    scanf("%f", &amount);
+    if (amount < 0)
+    {
+        printf("A quantia não pode ser negativa.\n");
+        return;
+    }
+    customer->balance += amount;
+    printf("O saldo do cliente %s foi atualizado para €%.2f.\n", customer->name, customer->balance);
+}
+
+/*CODIGO TEMPORARIO PARA A FASE 1*/

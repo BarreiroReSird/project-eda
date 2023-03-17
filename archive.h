@@ -48,4 +48,46 @@ void removeElectricMobilityVehicle(ElectricMobilityVehicle **head);
 int saveElectricMobilityVehiclesToFile(ElectricMobilityVehicle *head);
 int loadElectricMobilityVehiclesFromFile(ElectricMobilityVehicle **head, const char *filename);
 
+/*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
+struct CustomerV2
+{
+    int id;
+    char name[50];
+    char password;
+    int NIF;
+    float balance;
+    char address[100];
+    struct CustomerV2 *next;
+};
+
+typedef struct Mobility
+{
+    int id;
+    char type[20];
+    float battery;
+    float autonomy;
+    float price;
+    char geocode[20];
+    struct Mobility *next;
+} Mobility;
+
+typedef struct CustomerV2 CustomerV2;
+
+CustomerV2 *createCustomer(int id, char *name, char password, int NIF, float balance, char *address);
+
+void insertCustomer(CustomerV2 **head, CustomerV2 *newCustomer);
+
+void printList(CustomerV2 *head);
+
+int checkData(CustomerV2 *head);
+
+int menuFase1();
+
+void insertMobility(Mobility **head);
+
+void listMobility(Mobility *head);
+
+void addBalance(CustomerV2 *head);
+/*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
+
 #endif // ARCHIVE_H
