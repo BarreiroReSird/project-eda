@@ -104,44 +104,71 @@ void menuSignIn()
 
 void menuVehicles()
 {
+    int case0 = 0, case1 = 0, case2 = 0, case3 = 0, case4 = 0;
     while (1)
     {
         printf("\n>>> MENU 3 <<<\n"); // Menu apenas de gestores
         printf("Escolhas disponiveis:\n");
-        printf("1 (Ativar gestores)\n");                 // Ativa contas de gestores criadas mas inativas
-        printf("2 (Inserir ElectricMobilityVehicle)\n"); //  Insere novo ElectricMobilityVehicle;
-        printf("3 (Remover ElectricMobilityVehicle)\n"); //  Remove um ElectricMobilityVehicle;
-        printf("4 (Listar ElectricMobilityVehicles)\n"); //  Pergunta se lista ElectricMobilityVehicles temporarios ou persistentes;
-        printf("0 (Sair)\n");                            //  Volta ao menu 1 (Area)
+        printf("1 (Ativar gestores)\n"); // Ativa contas de gestores criadas mas inativas;
+        printf("2 (Inserir meios)\n");   //  Insere novo meio;
+        printf("3 (Remover meios)\n");   //  Remove um meio;
+        printf("4 (Listar meios)\n");    //  Pergunta se lista meios temporarios ou persistentes;
+        printf("5 (Guardar Meios)\n");   // Guarda meios da lista ligada num txt;
+        printf("6 (Ler Meios)\n");       // Le meios do txt para a lista ligada;
+        printf("0 (Sair)\n");            //  Volta ao menu 1 (Area)
         printf("\nO que deseja fazer:\n");
         scanf("%d", &managerTaskGlobal);
         ElectricMobilityVehicle *head = NULL;
         switch (managerTaskGlobal)
         {
         case 0:
+            // Volta ao menu 1 (escolha de gestor ou cliente);
+            case0 = 1;
             printf("\nA voltar ao menu 1...\n");
-            menuArea();
+            break;
         case 1:
-            // Ativar gestores
+            case1 = 1;
+            // Ativa gestores com a conta desativada;
+            printf("\nEsta funcionalidade ainda nao funciona...\n");
+            break;
         case 2:
-            // Inserir novo ElectricMobilityVehicle
+            case2 = 1;
+            // Insere um novo meio
             addElectricMobilityVehicle(&head);
             break;
-            // menuVehicles();
         case 3:
-            // Remover ElectricMobilityVehicle
+            // Remove um dos meios ja criados;
             removeElectricMobilityVehicle(&head);
             break;
-            // menuVehicles();
         case 4:
-            // Listar todos ElectricMobilityVehicle
+            // Lista todos os meios criados guardados na lista ligada
             listElectricMobilityVehicles(head);
             break;
-            // menuVehicles();
+        case 5:
+            // Guarda os meios da lista ligada num ficheiro txt
+            saveElectricMobilityVehiclesToFile(head);
+            break;
+        case 6:
+            // Carregar ElectricMobilityVehicles de um ficheiro de texto
+            loadElectricMobilityVehiclesFromFile(&head, "data.txt");
+            break;
         default:
+            // Avisa que escolha deu erro e reinicia
             printf("\nErro, escolha invalida.\n");
+            continue;
+        }
+        if (case0 == 1 || case1 == 1 || case2 == 1 || case3 == 1 || case4 == 1)
+        {
             break;
         }
+    }
+    if (case0 == 1)
+    {
+        menuArea();
+    }
+    if (case1 == 1 || case2 == 1 || case3 == 1 || case4 == 1)
+    {
+        menuVehicles();
     }
 }
 
@@ -331,8 +358,20 @@ void addElectricMobilityVehicle(ElectricMobilityVehicle **head)
 
     // atribui o próximo id e incrementa o contador
     newVehicle->id = nextId++;
-    newVehicle->next = *head;
-    *head = newVehicle;
+    newVehicle->next = NULL;
+    if (*head == NULL)
+    {
+        *head = newVehicle;
+    }
+    else
+    {
+        ElectricMobilityVehicle *current = *head;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = newVehicle;
+    }
 }
 
 // Listar o conteúdo da lista ligada
@@ -397,4 +436,93 @@ void removeElectricMobilityVehicle(ElectricMobilityVehicle **head)
     free(current);
 
     printf("Elemento com o ID %d removido com sucesso.\n", id);
+}
+
+// Guarda os dados da lista ligada no ficheiro txt
+int saveElectricMobilityVehiclesToFile(ElectricMobilityVehicle *head)
+{
+    const char *filename = "data.txt";
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL)
+    {
+        printf("Erro ao abrir o ficheiro %s\n", filename);
+        return -1;
+    }
+
+    ElectricMobilityVehicle *current = head;
+    while (current != NULL)
+    {
+        fprintf(fp, "%d;%s;%d;%.2f;%s\n", current->id, current->type, current->battery, current->price, current->geocode);
+        current = current->next;
+    }
+
+    fclose(fp);
+    printf("Dados guardados no ficheiro %s\n", filename);
+    return 0;
+}
+
+// Le os dados do ficheiro txt e guarda na lista ligada;
+int loadElectricMobilityVehiclesFromFile(ElectricMobilityVehicle **head, const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL)
+    {
+        printf("Erro ao abrir o ficheiro %s\n", filename);
+        return -1;
+    }
+
+    char line[100];
+    while (fgets(line, sizeof(line), fp))
+    {
+        // Extrai informações da linha;
+        char *token = strtok(line, ";");
+        int id = atoi(token);
+
+        token = strtok(NULL, ";");
+        char type[20];
+        strcpy(type, token);
+
+        token = strtok(NULL, ";");
+        int battery = atoi(token);
+
+        token = strtok(NULL, ";");
+        float price = atof(token);
+
+        token = strtok(NULL, "\n");
+        char geocode[20];
+        strcpy(geocode, token);
+
+        // Verifica se já existe um veículo com o mesmo ID na lista ligada;
+        ElectricMobilityVehicle *current = *head;
+        while (current != NULL)
+        {
+            if (current->id == id)
+            {
+                // Já existe um veículo com o mesmo ID, então o substitui;
+                strcpy(current->type, type);
+                current->battery = battery;
+                current->price = price;
+                strcpy(current->geocode, geocode);
+                break;
+            }
+            current = current->next;
+        }
+
+        if (current == NULL)
+        {
+            // Não encontrou um veículo com o mesmo ID, então adiciona um novo nó à lista ligada
+            ElectricMobilityVehicle *newVehicle = (ElectricMobilityVehicle *)malloc(sizeof(ElectricMobilityVehicle));
+            newVehicle->id = id;
+            strcpy(newVehicle->type, type);
+            newVehicle->battery = battery;
+            newVehicle->price = price;
+            strcpy(newVehicle->geocode, geocode);
+            newVehicle->next = *head;
+            *head = newVehicle;
+        }
+    }
+
+    fclose(fp);
+    printf("Dados guardados: %s\n", filename);
+    return 0;
 }

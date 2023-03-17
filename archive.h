@@ -45,5 +45,7 @@ void loginCustomer();
 void addElectricMobilityVehicle(ElectricMobilityVehicle **head);
 void listElectricMobilityVehicles(ElectricMobilityVehicle *head);
 void removeElectricMobilityVehicle(ElectricMobilityVehicle **head);
+int saveElectricMobilityVehiclesToFile(ElectricMobilityVehicle *head);
+int loadElectricMobilityVehiclesFromFile(ElectricMobilityVehicle **head, const char *filename);
 
 #endif // ARCHIVE_H
