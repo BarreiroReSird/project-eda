@@ -87,7 +87,15 @@ void insertMobility(Mobility **head);
 
 void listMobility(Mobility *head);
 
+CustomerV2 *findCustomer(CustomerV2 *head, int id);
+
 void addBalance(CustomerV2 *head);
+
+Mobility *findMobility(Mobility *head, int id);
+
+void rentMobility(CustomerV2 *head1, Mobility *head2);
+
+void updateMobility(Mobility *head2);
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
 
 #endif // ARCHIVE_H

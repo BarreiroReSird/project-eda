@@ -622,13 +622,13 @@ int menuFase1()
 {
     int choice;
     printf("\n--> MENU <--\n");
-    printf("1 para inserir dados sobre os meios de mobilidade eletrica (Fase2: Apenas para Gestores)\n");
+    printf("1 para inserir dados sobre os meios de mobilidade eletrica\n"); // Fase2: Apenas para Gestores
     printf("2 para listar todos os dados sobre os meios de mobilidade eletrica\n");
-    // printf("1 para inserir meio\n");
-    // printf("2 Listar Meios\n");
-    // printf("3 Remover Meio\n");
-    // printf("4 Guardar Meios\n");
-    // printf("5 Ler Meios\n");
+    printf("3 para carregar saldo de um cliente escolhido\n");                                                                             // Fase2: determina id apartir do login
+    printf("4 para alugar meio de mobilidade eletrica (Recomendado listar primeiro todos os meios para saber o id do meio pretendido)\n"); // Fase2: determina id apartir do login
+    printf("5 para alterar meio de mobilidade eletrica\n");                                                                                // Fase2: apenas para gestores
+    printf("6 para remover meio de mobilidade eletrica\n");                                                                                // Fase2: apenas para gestores
+    printf("7 para localizar meio de mobilidade eletrica\n");                                                                              // Fase2: apenas para gestores
     printf("0 para encerrar o programa\n");
     printf("\nA sua escolha:");
     scanf("%d", &choice);
@@ -694,6 +694,20 @@ void listMobility(Mobility *head2)
     }
 }
 
+CustomerV2 *findCustomer(CustomerV2 *head, int id)
+{
+    CustomerV2 *current = head;
+    while (current != NULL)
+    {
+        if (current->id == id)
+        {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
+
 void addBalance(CustomerV2 *head)
 {
     int id;
@@ -706,7 +720,7 @@ void addBalance(CustomerV2 *head)
         printf("Cliente não encontrado.\n");
         return;
     }
-    printf("Insira a quantia a ser adicionada ao saldo: ");
+    printf("Insira a quantia a ser adicionada ao saldo (euro): ");
     scanf("%f", &amount);
     if (amount < 0)
     {
@@ -714,7 +728,90 @@ void addBalance(CustomerV2 *head)
         return;
     }
     customer->balance += amount;
-    printf("O saldo do cliente %s foi atualizado para €%.2f.\n", customer->name, customer->balance);
+    printf("O saldo do cliente %s foi atualizado para %.2f (euro).\n", customer->name, customer->balance);
+}
+
+Mobility *findMobility(Mobility *head, int id)
+{
+    Mobility *current_mobility = head;
+    while (current_mobility != NULL)
+    {
+        if (current_mobility->id == id)
+        {
+            return current_mobility;
+        }
+        current_mobility = current_mobility->next;
+    }
+    return NULL;
+}
+
+void rentMobility(CustomerV2 *head1, Mobility *head2)
+{
+    int customer_id, mobility_id;
+    printf("Insira o ID do cliente que ira alugar o meio de mobilidade eletrica: ");
+    scanf("%d", &customer_id);
+    printf("Insira o ID do meio de mobilidade eletrica: ");
+    scanf("%d", &mobility_id);
+
+    // Procura o cliente na lista ligada
+    CustomerV2 *current_customer = findCustomer(head1, customer_id);
+    if (current_customer == NULL)
+    {
+        printf("Cliente nao encontrado.\n");
+        return;
+    }
+
+    // Procura o meio de mobilidade eletrica na lista ligada
+    Mobility *current_mobility = findMobility(head2, mobility_id);
+    if (current_mobility == NULL)
+    {
+        printf("Meio de mobilidade eletrica nao encontrado.\n");
+        return;
+    }
+
+    // Verifica se o cliente tem saldo suficiente
+    if (current_customer->balance < current_mobility->price)
+    {
+        printf("Saldo insuficiente.\n");
+        return;
+    }
+
+    // Atualiza o saldo do cliente
+    current_customer->balance -= current_mobility->price;
+
+    printf("Meio de mobilidade eletrica alugado com sucesso!\n");
+}
+
+void updateMobility(Mobility *head2)
+{
+    int id;
+    printf("Insira o ID do meio de mobilidade eletrica que deseja atualizar: ");
+    scanf("%d", &id);
+
+    // Procura o meio de mobilidade eletrica na lista ligada
+    Mobility *current_mobility = findMobility(head2, id);
+    if (current_mobility == NULL)
+    {
+        printf("Meio de mobilidade eletrica nao encontrado.\n");
+        return;
+    }
+
+    printf("Insira o novo tipo do meio de mobilidade: ");
+    scanf(" %s", &current_mobility->type);
+
+    printf("Insira a nova carga da bateria (em %%): ");
+    scanf("%f", &current_mobility->battery);
+
+    printf("Insira a nova autonomia (em km): ");
+    scanf("%f", &current_mobility->autonomy);
+
+    printf("Insira o novo custo (por hora): ");
+    scanf("%f", &current_mobility->price);
+
+    printf("Insira o novo geocodigo do meio de mobilidade: (What3Words sera aplicado brevemente)");
+    scanf(" %s", &current_mobility->geocode);
+
+    printf("Dados do meio de mobilidade eletrica atualizados com sucesso!\n");
 }
 
 /*CODIGO TEMPORARIO PARA A FASE 1*/

@@ -62,6 +62,15 @@ int main()
             addBalance(head1);
             break;
         case 4: // Alugar meio de mobilidade eletrica
+            rentMobility(head1, head2);
+            break;
+        case 5: // Alterar meio de mobilidade eletrica
+            updateMobility(head2);
+            break;
+        case 6: // Remover meio de mobilidade eletrica
+
+            break;
+        case 7: // Localizar meio de mobilidade eletrica
 
             break;
         default:
