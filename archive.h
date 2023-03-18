@@ -2,6 +2,8 @@
 #define ARCHIVE_H
 
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
+
+// Estrutura do cliente
 struct CustomerV2
 {
     int id;
@@ -13,6 +15,7 @@ struct CustomerV2
     struct CustomerV2 *next;
 };
 
+// Estrutura do meio
 typedef struct Mobility
 {
     int id;
@@ -24,6 +27,7 @@ typedef struct Mobility
     struct Mobility *next;
 } Mobility;
 
+// Estrutura do gestor
 struct Admin
 {
     int id;
@@ -73,7 +77,7 @@ void updateCustomer(CustomerV2 *head);
 
 void updateAdmin(Admin **head);
 
-//void listMobilityByAutonomy(Mobility *head2);
+// void listMobilityByAutonomy(Mobility *head2);
 
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
 

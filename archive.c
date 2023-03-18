@@ -5,6 +5,8 @@
 #include <math.h>
 
 /*CODIGO TEMPORARIO PARA A FASE 1*/
+
+// Cria cliente e retorna para ser inserido
 CustomerV2 *createCustomer(int id, char *name, char password, int NIF, float balance, char *address)
 {
     CustomerV2 *newCustomer = (CustomerV2 *)malloc(sizeof(CustomerV2));
@@ -18,6 +20,7 @@ CustomerV2 *createCustomer(int id, char *name, char password, int NIF, float bal
     return newCustomer;
 }
 
+// Acede ao cliente guardado temporariamente e insere na lista licada
 void insertCustomer(CustomerV2 **head1, CustomerV2 *newCustomer)
 {
     if (*head1 == NULL)
@@ -35,6 +38,7 @@ void insertCustomer(CustomerV2 **head1, CustomerV2 *newCustomer)
     }
 }
 
+// Verifica se o cliente tem os dados minimos
 int checkData(CustomerV2 *head1)
 {
     printf("\nA verificar integridade dos dados...\n");
@@ -79,6 +83,7 @@ int checkData(CustomerV2 *head1)
     return 1;
 }
 
+// Abre o menu
 int menuFase1()
 {
     int choice;
@@ -101,6 +106,7 @@ int menuFase1()
     return (choice);
 }
 
+// Insere meio na lista ligada
 void insertMobility(Mobility **head2)
 {
     Mobility *newMobility = (Mobility *)malloc(sizeof(Mobility));
@@ -139,6 +145,7 @@ void insertMobility(Mobility **head2)
     *head2 = newMobility;
 }
 
+// Lista a lista ligada
 void listMobility(Mobility *head2)
 {
     Mobility *current = head2;
@@ -160,6 +167,7 @@ void listMobility(Mobility *head2)
     }
 }
 
+// Encontra o cliente pretendido
 CustomerV2 *findCustomer(CustomerV2 *head, int id)
 {
     CustomerV2 *current = head;
@@ -174,6 +182,7 @@ CustomerV2 *findCustomer(CustomerV2 *head, int id)
     return NULL;
 }
 
+// Adiciona saldo a um cliente pretendido
 void addBalance(CustomerV2 *head)
 {
     int id;
@@ -197,6 +206,7 @@ void addBalance(CustomerV2 *head)
     printf("O saldo do cliente %s foi atualizado para %.2f (euro).\n", customer->name, customer->balance);
 }
 
+// Encontra meio pretendido
 Mobility *findMobility(Mobility *head, int id)
 {
     Mobility *current_mobility = head;
@@ -211,6 +221,7 @@ Mobility *findMobility(Mobility *head, int id)
     return NULL;
 }
 
+// Aluga meio pretendido
 void rentMobility(CustomerV2 *head1, Mobility *head2)
 {
     int customer_id, mobility_id;
@@ -248,6 +259,7 @@ void rentMobility(CustomerV2 *head1, Mobility *head2)
     printf("Meio de mobilidade eletrica alugado com sucesso!\n");
 }
 
+// Altera dados de um meio existente
 void updateMobility(Mobility *head2)
 {
     int id;
@@ -280,6 +292,7 @@ void updateMobility(Mobility *head2)
     printf("Dados do meio de mobilidade eletrica atualizados com sucesso!\n");
 }
 
+// Apaga um meio existente
 void deleteMobility(Mobility **head2)
 {
     int id;
@@ -319,6 +332,7 @@ void deleteMobility(Mobility **head2)
     printf("Meio de mobilidade eletrica nao encontrado.\n");
 }
 
+// Cria um gestor e retorna para ser inserido
 Admin *createAdmin(int id, char *name, char *password, int active)
 {
     Admin *newAdmin = (Admin *)malloc(sizeof(Admin));
@@ -330,6 +344,7 @@ Admin *createAdmin(int id, char *name, char *password, int active)
     return newAdmin;
 }
 
+// Insere o gestor na lista ligada
 void insertAdmin(Admin **head, Admin *newAdmin)
 {
     if (*head == NULL)
@@ -347,6 +362,7 @@ void insertAdmin(Admin **head, Admin *newAdmin)
     }
 }
 
+// Remove cliente
 void removeCustomer(CustomerV2 **head)
 {
     int id;
@@ -383,6 +399,7 @@ void removeCustomer(CustomerV2 **head)
     printf("Cliente com ID %d nao encontrado.\n", id);
 }
 
+// Remove gestor
 void removeAdmin(Admin **head)
 {
     int id;
@@ -419,6 +436,7 @@ void removeAdmin(Admin **head)
     printf("Gestor com ID %d nao encontrado.\n", id);
 }
 
+// Altera dados do cliente
 void updateCustomer(CustomerV2 *head)
 {
     int id;
@@ -491,6 +509,7 @@ void updateCustomer(CustomerV2 *head)
     printf("Cliente com ID %d nao encontrado.\n", id);
 }
 
+// Altera dados do gestor
 void updateAdmin(Admin **head)
 {
     int id;
