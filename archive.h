@@ -1,53 +1,6 @@
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
-typedef struct ElectricMobilityVehicle
-{
-    int id;
-    char type[20];
-    float battery;
-    float autonomy;
-    float price;
-    char geocode[20];
-    struct ElectricMobilityVehicle *next;
-} ElectricMobilityVehicle;
-
-typedef struct
-{
-    int id;
-    char name[50];
-    char password;
-    char address[100];
-    char nif[9];
-    float balance;
-} Customer;
-typedef struct
-{
-    int id;
-    char name[50];
-    char password[20];
-    int active;
-} Manager;
-
-typedef struct ManagerNode
-{
-    Manager manager;
-    struct ManagerNode *next;
-} ManagerNode;
-
-void menuArea();
-void menuSignIn();
-void menuVehicles();
-void registerManager(ManagerNode **head);
-Manager *loginManager(ManagerNode *head);
-void registerCustomer();
-void loginCustomer();
-void addElectricMobilityVehicle(ElectricMobilityVehicle **head);
-void listElectricMobilityVehicles(ElectricMobilityVehicle *head);
-void removeElectricMobilityVehicle(ElectricMobilityVehicle **head);
-int saveElectricMobilityVehiclesToFile(ElectricMobilityVehicle *head);
-int loadElectricMobilityVehiclesFromFile(ElectricMobilityVehicle **head, const char *filename);
-
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
 struct CustomerV2
 {
@@ -71,13 +24,22 @@ typedef struct Mobility
     struct Mobility *next;
 } Mobility;
 
+struct Admin
+{
+    int id;
+    char name[20];
+    char password[20];
+    int active;
+    struct Admin *next;
+};
+
 typedef struct CustomerV2 CustomerV2;
+
+typedef struct Admin Admin;
 
 CustomerV2 *createCustomer(int id, char *name, char password, int NIF, float balance, char *address);
 
 void insertCustomer(CustomerV2 **head, CustomerV2 *newCustomer);
-
-void printList(CustomerV2 *head);
 
 int checkData(CustomerV2 *head);
 
@@ -96,6 +58,22 @@ Mobility *findMobility(Mobility *head, int id);
 void rentMobility(CustomerV2 *head1, Mobility *head2);
 
 void updateMobility(Mobility *head2);
+
+void deleteMobility(Mobility **head2);
+
+Admin *createAdmin(int id, char *name, char *password, int active);
+
+void insertAdmin(Admin **head, Admin *newAdmin);
+
+void removeCustomer(CustomerV2 **head);
+
+void removeAdmin(Admin **head);
+
+void updateCustomer(CustomerV2 *head);
+
+void updateAdmin(Admin **head);
+
+void listMobilityByAutonomy(Mobility *head2);
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
 
 #endif // ARCHIVE_H
