@@ -73,7 +73,8 @@ void updateCustomer(CustomerV2 *head);
 
 void updateAdmin(Admin **head);
 
-void listMobilityByAutonomy(Mobility *head2);
+//void listMobilityByAutonomy(Mobility *head2);
+
 /*CODIGO TEMPORARIO APENAS PARA A FASE 1*/
 
 #endif // ARCHIVE_H

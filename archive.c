@@ -523,4 +523,63 @@ void updateAdmin(Admin **head)
     printf("Gestor com ID %d nao encontrado.\n", id);
 }
 
+/*
+void swap(Mobility *a, Mobility *b)
+{
+    Mobility temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void sortByAutonomy(Mobility *head2)
+{
+    Mobility *current = head2;
+    Mobility *next = NULL;
+    int swapped;
+
+    if (head2 == NULL)
+        return;
+
+    do
+    {
+        swapped = 0;
+        current = head2;
+
+        while (current->next != next)
+        {
+            if (current->autonomy < current->next->autonomy)
+            {
+                swap(current, current->next);
+                swapped = 1;
+            }
+            current = current->next;
+        }
+        next = current;
+    } while (swapped);
+}
+
+void listMobilityByAutonomy(Mobility *head2)
+{
+    sortByAutonomy(head2);
+
+    Mobility *current = head2;
+
+    if (current == NULL)
+    {
+        printf("\nNenhum meio de mobilidade encontrado!\n");
+    }
+    else
+    {
+        printf("\n--> Lista de meios de mobilidade por ordem decrescente de autonomia <--\n");
+        printf("ID\tTipo\tBateria\tAutonomia\tPreco\tGeocode\n");
+
+        while (current != NULL)
+        {
+            printf("%d\t%s\t%.2f\t%.2f\t\t%.2f\t%s\n", current->id, current->type, current->battery, current->autonomy, current->price, current->geocode);
+            current = current->next;
+        }
+    }
+}
+*/
+
 /*CODIGO TEMPORARIO PARA A FASE 1*/

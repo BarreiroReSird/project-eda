@@ -108,7 +108,8 @@ int main()
             updateAdmin(&head3);
             break;
         case 12: // Listagem dos meios de mobilidade elétrica por ordem decrescente de autonomia
-            listMobilityByAutonomy(head2); 
+            printf("\nBrevemente funcional!\n");
+            // listMobilityByAutonomy(head2);
             break;
         default:
             break;
