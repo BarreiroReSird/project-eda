@@ -1,0 +1,12 @@
+Meio|2|100.00|50.00|5.00|torre.pedal.luz
+Meio|1|100.00|25.00|5.00|painel.zebra.garrafa
+Cliente|1|a|123456789|1000.00|133 Main St|ponte.azul.pedra
+Cliente|2|b|987654321|500.00|458 High St|votam.grampo.teste
+Cliente|3|c|111111111|2000.00|459 Park Ave|caneta.estudar.teste
+Cliente|4|d|222222222|1500.00|478 Elm St|votam.caneta.estudo
+Cliente|5|e|333333333|3000.00|719 Maple St|votam.grampo.caneta
+Cliente|6|a|123476789|1000.00|123 Main St|navegar.grampo.teste
+Cliente|7|b|987684321|500.00|456 High St|votam.grampo.pedra
+Cliente|8|c|111191111|2000.00|789 Park Ave|carro.grampo.teste
+Cliente|9|d|222922222|1500.00|456 Elm St|votam.rato.teste
+Cliente|10|e|333339933|3000.00|789 Maple St|torre.grampo.teste
