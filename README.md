@@ -26,3 +26,5 @@ O projeto para esta fase é constituido pelos seguintes ficheiros:
     - latex ;
     - doxyfile .
 Para iniciar o programa basta, dentro do diretorio "project-eda", executar o "program.exe" ou na consola inserir o seguinte codigo: "./program"
+Link para o repositorio github: https://github.com/BarreiroReSird/project-eda
+Link para Trello: https://trello.com/invite/b/RfseAnfi/ATTI8dd2adcc8f56218964f69e87a73d45cf1FF4B24B/eda
